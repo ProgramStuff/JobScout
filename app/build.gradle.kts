@@ -52,7 +52,6 @@ android {
 
 dependencies {
 
-    implementation("androidx.compose.ui:ui-text-google-fonts:1.7.5")
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.navigation.compose)

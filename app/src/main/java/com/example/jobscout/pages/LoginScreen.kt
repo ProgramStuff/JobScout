@@ -79,10 +79,9 @@ fun LoginScreen(onLoginSuccess: () -> Unit, userViewModel: UserViewModel) {
         Spacer(modifier = Modifier.padding(10.dp))
 
         // Loop through each user in array and try to login with current values
-        // TODO: This is for testing change back to email and password values
         Button(onClick = {
             val matchingUser = users.find { user ->
-                user.email == "jordan@nscc.ca" && user.password == "password"
+                user.email == email && user.password == password
             }
 
             if (matchingUser != null) {
