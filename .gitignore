@@ -107,6 +107,7 @@ proguard/
 *.ipr
 *~
 *.swp
+.local.properties
 
 # Keystore files
 
