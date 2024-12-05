@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    StartApp(userViewModel = userViewModel)
+                    StartApp(userViewModel, appliedVewModel, jobViewModel)
                 }
             }
         }
@@ -76,12 +76,12 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun StartApp(userViewModel: UserViewModel) {
+fun StartApp(userViewModel: UserViewModel, appliedViewModel: AppliedViewModel, jobViewModel: JobViewModel) {
     var isLoggedIn by remember {mutableStateOf(false)}
     var isSignedUp by remember {mutableStateOf(false)}
 
     if (isLoggedIn) {
-        WelcomeScreen()
+        WelcomeScreen(appliedViewModel, jobViewModel)
     } else {
         // The lambda function that is called on successful login
         Login(onLoginSuccess = {isLoggedIn = true},
