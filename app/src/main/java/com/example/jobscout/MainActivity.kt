@@ -37,6 +37,7 @@ import androidx.room.RoomDatabase
 import com.example.jobscout.Data.AppDatabase
 import com.example.jobscout.Data.AppliedJob
 import com.example.jobscout.Data.AppliedJobDao
+import com.example.jobscout.Data.AppliedViewModel
 import com.example.jobscout.Data.Job
 import com.example.jobscout.Data.JobDao
 import com.example.jobscout.Data.JobViewModel
@@ -53,8 +54,10 @@ import com.example.jobscout.ui.theme.JobScoutTheme
 
 
 class MainActivity : ComponentActivity() {
+    // All ViewModel are instantiated and passed from MainActivity
     private val userViewModel: UserViewModel by viewModels()
     private val jobViewModel: JobViewModel by viewModels()
+    private val appliedVewModel: AppliedViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,7 +68,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    UserApp(userViewModel, jobViewModel)
+                    StartApp(userViewModel = userViewModel)
                 }
             }
         }
@@ -73,92 +76,18 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun UserApp(userViewModel: UserViewModel, jobViewModel: JobViewModel) {
-    val users = userViewModel.users
+fun StartApp(userViewModel: UserViewModel) {
+    var isLoggedIn by remember {mutableStateOf(false)}
+    var isSignedUp by remember {mutableStateOf(false)}
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp)){
-        var fName by remember {mutableStateOf("")}
-        var lName by remember {mutableStateOf("")}
-        var email by remember {mutableStateOf("")}
-        var password by remember {mutableStateOf("")}
-
-        OutlinedTextField(value = fName, onValueChange = {fName = it},
-            label = { Text(text = "Enter First name: ")},
-            modifier = Modifier.fillMaxWidth()
+    if (isLoggedIn) {
+        WelcomeScreen()
+    } else {
+        // The lambda function that is called on successful login
+        Login(onLoginSuccess = {isLoggedIn = true},
+            // Successful set the value state to true to navigate to login
+            onSignUpSuccess = { isSignedUp = true },
+            userViewModel = userViewModel
         )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        OutlinedTextField(value = lName, onValueChange = {lName = it},
-            label = { Text(text = "Enter Last name: ")},
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        OutlinedTextField(value = email, onValueChange = {email = it},
-            label = { Text(text = "Enter email: ")},
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedTextField(value = password, onValueChange = {password = it},
-            label = { Text(text = "Enter your password: ")},
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Button(
-            onClick = {
-                if (fName.isNotBlank() && lName.isNotBlank() && email.isNotBlank() && password.isNotBlank()){
-                    val user = User(fName = fName, lName = lName, email = email, password = password)
-                    userViewModel.addUser(user)
-                    fName = ""
-                    lName = ""
-                    email = ""
-                    password = ""
-                }
-            },
-        ) {
-            Text(text = "Add User")
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(text = "User List", style = MaterialTheme.typography.titleMedium)
-        LazyColumn {
-            items(users) { user ->
-                UserItem(user, userViewModel)
-
-            }
-        }
-
     }
-}
-
-@Composable
-fun UserItem(user: User, userViewModel: UserViewModel) {
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .padding(8.dp)
-    ){
-        Text(text = user.fName, modifier = Modifier.weight(1f))
-        Text(text = user.lName, modifier = Modifier.weight(1f))
-        Text(text = user.email, modifier = Modifier.weight(1f))
-        Text(text = user.password, modifier = Modifier.weight(1f))
-
-
-        Spacer(modifier = Modifier.width(8.dp))
-
-        Button(
-            onClick = {userViewModel.deleteUser(user)},
-            modifier = Modifier.padding(start = 8.dp)
-        ){
-            Text(text = "Delete")
-        }
-
-    }
-
 }
