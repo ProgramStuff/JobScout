@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -48,12 +49,13 @@ fun LoginScreen(onLoginSuccess: () -> Unit, userViewModel: UserViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-
         ) {
-        Text(text = "Login")
-        Spacer(modifier = Modifier.padding(40.dp))
+
+        Spacer(modifier = Modifier.height(200.dp))
+
+        Text(text = "Login", style = MaterialTheme.typography.headlineSmall)
+        Spacer(modifier = Modifier.height(20.dp))
 
 
         /*** Email with validation ***/
@@ -91,7 +93,9 @@ fun LoginScreen(onLoginSuccess: () -> Unit, userViewModel: UserViewModel) {
         }) {
             Text(text = "Login")
         }
+        Spacer(modifier = Modifier.height(8.dp))
         Text(text = welcomeMsg)
     }
+
 
 }
