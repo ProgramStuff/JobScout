@@ -12,10 +12,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.jobscout.Data.JobViewModel
 
 @Composable
-fun HomeScreen(jobViewModel: JobViewModel){
+fun HomeScreen(modifier: Modifier = Modifier){
 
 
     Column(
