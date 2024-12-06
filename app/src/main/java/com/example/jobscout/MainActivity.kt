@@ -81,7 +81,7 @@ fun StartApp(userViewModel: UserViewModel, appliedViewModel: AppliedViewModel, j
     var isSignedUp by remember {mutableStateOf(false)}
 
     if (isLoggedIn) {
-        WelcomeScreen(appliedViewModel, jobViewModel)
+        WelcomeScreen(appliedViewModel, jobViewModel, userViewModel)
     } else {
         // The lambda function that is called on successful login
         Login(onLoginSuccess = {isLoggedIn = true},

@@ -92,7 +92,7 @@ fun LoginScreen(onLoginSuccess: () -> Unit, userViewModel: UserViewModel) {
                 // Get the logged in users id to access throughout app
                 users.forEachIndexed{ index, user ->
                     if(user.email == "jordan@nscc.ca"){
-                        loggedInUser = user
+                        userViewModel.loggedInUser(user)
                     }
                 }
                 welcomeMsg = "Login Success"

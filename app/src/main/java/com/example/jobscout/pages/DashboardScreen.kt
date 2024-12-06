@@ -1,11 +1,7 @@
 package com.example.jobscout.pages
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,7 +12,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -60,22 +55,35 @@ import androidx.compose.ui.text.googlefonts.Font
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
+import com.example.jobscout.Data.AppliedJob
+import com.example.jobscout.Data.JobViewModel
+import com.example.jobscout.Data.UserViewModel
 import com.example.jobscout.R
 
 
 @Composable
-fun Dashboard( appliedVewModel: AppliedViewModel){
+fun Dashboard( appliedVewModel: AppliedViewModel, userViewModel: UserViewModel, jobViewModel: JobViewModel){
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "applied") {
-        composable("applied") { AppliedJobScreen(navController, appliedVewModel) }
+        composable("applied") { AppliedJobScreen(navController, appliedVewModel, userViewModel, jobViewModel) }
         composable("saved") { SavedJobScreen(navController, appliedVewModel) }
     }
 }
 
 
 @Composable
-fun AppliedJobScreen(navController: NavHostController, appliedVewModel: AppliedViewModel) {
+fun AppliedJobScreen(navController: NavHostController, appliedVewModel: AppliedViewModel, userViewModel: UserViewModel, jobViewModel: JobViewModel) {
+    val currentUser = userViewModel.loggedInUser
     val appliedJobs = appliedVewModel.appliedJob
+    jobViewModel
+    val allJobs = jobViewModel.jobs
+
+
+
+
+
+
+
     // Google fonts package provider
     val provider = GoogleFont.Provider(
         providerAuthority = "com.google.android.gms.fonts",
@@ -89,13 +97,6 @@ fun AppliedJobScreen(navController: NavHostController, appliedVewModel: AppliedV
         Font(googleFont = fontName, fontProvider = provider)
     )
 
-
-
-    val userId = 1
-    val jobId = 1
-    val jobTitle = "Software Developer"
-    val jobStatus = "Interviewing"
-    val url = "https://ca.indeed.com/q-software-developer-l-nova-scotia-jobs.html?vjk=51e57b4068be6a1c"
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
@@ -106,6 +107,14 @@ fun AppliedJobScreen(navController: NavHostController, appliedVewModel: AppliedV
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+        if (appliedJobs.isEmpty()){
+            Text(text = "Empty")
+        }
+
+
+
+
             Text(text = "Job Scout", fontFamily = newFontFamily, fontSize = 20.sp, textAlign = TextAlign.Left)
             Spacer(modifier = Modifier.height(25.dp))
 
@@ -132,24 +141,32 @@ fun AppliedJobScreen(navController: NavHostController, appliedVewModel: AppliedV
             Column(
                 modifier = Modifier.verticalScroll(rememberScrollState())
             ) {
-                Row {
-                    JobCard(userId, jobId, jobTitle, jobStatus, url)
-                }
-                Spacer(modifier = Modifier.height(16.dp))
+                for (appliedJob in appliedJobs) {
+                    if (currentUser != null) {
+                        if (appliedJob.userId == currentUser.userId){
+                            for (job in allJobs){
+                                if (job.jobId == appliedJob.jobId){
+                                    Row {
+                                        JobCard(
+                                            currentUser.userId,
+                                            appliedJob.jobId,
+                                            job.jobTitle,
+                                            appliedJob.status,
+                                            job.jobTitle,
+                                            "Company Name"
+                                        )
+                                    }
+                                    Spacer(modifier = Modifier.height(16.dp))
 
-                Row {
-                    JobCard(userId, jobId, jobTitle, jobStatus, url)
+                                }
+                            }
+                        }
+                    }
                 }
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Row {
-                    JobCard(userId, jobId, jobTitle, jobStatus, url)
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Row {
-                    JobCard(userId, jobId, jobTitle, jobStatus, url)
-                }
+                // TODO: Get applied jobs with userId
+                // TODO: Delete button
+                // TODO: Saved updated status
+                // TODO: Make title a link to job posting
 
                 // ! Keep this spacer at the bottom, it ensures cards are not hidden by nav bar !
                 Spacer(modifier = Modifier.height(80.dp))
@@ -193,7 +210,7 @@ fun SavedJobScreen(navController: NavHostController, appliedVewModel: AppliedVie
 
 
 @Composable
-fun JobCard(userId: Int, jobId: Int, jobTitle: String, jobStatus: String, url: String) {
+fun JobCard(userId: Int, jobId: Int, jobTitle: String, jobStatus: String, url: String, companyName: String) {
     ElevatedCard(
         elevation  = CardDefaults.cardElevation(
             defaultElevation = 6.dp
@@ -225,7 +242,7 @@ fun JobCard(userId: Int, jobId: Int, jobTitle: String, jobStatus: String, url: S
                         fontSize = 15.sp,
                     )
                 ) {
-                    append("\nGeneral Dynamics")
+                    append("\n" + companyName)
                 }
                 withStyle(
                     // Apply style to the second section of the string
