@@ -36,11 +36,13 @@ class User(private val validUsername: String, private val validPassword: String)
 // Login screen takes a lambda function or a function with no return value or parameters
 // This allows navigation to WelcomeScreen after login
 @Composable
+// TODO: Prop drill user to DashBoard
 fun LoginScreen(onLoginSuccess: () -> Unit, userViewModel: UserViewModel) {
     var email by remember { mutableStateOf("") };
     var password by remember { mutableStateOf("") };
     var welcomeMsg by remember { mutableStateOf("") };
     var emailError by remember { mutableStateOf("")}
+    var loggedInUser by remember { mutableStateOf<Any?>(null) }
     val users = userViewModel.users
 
 
@@ -82,9 +84,17 @@ fun LoginScreen(onLoginSuccess: () -> Unit, userViewModel: UserViewModel) {
         Button(onClick = {
             val matchingUser = users.find { user ->
                 // TODO: This is for testing change back to email and password values
-                user.email == "jordan@nscc.ca" && user.password == "password"            }
+
+                user.email == "jordan@nscc.ca" && user.password == "password"
+            }
 
             if (matchingUser != null) {
+                // Get the logged in users id to access throughout app
+                users.forEachIndexed{ index, user ->
+                    if(user.email == "jordan@nscc.ca"){
+                        loggedInUser = user
+                    }
+                }
                 welcomeMsg = "Login Success"
                 onLoginSuccess()
             } else {
