@@ -1,7 +1,10 @@
 package com.example.jobscout.Data
 
 import android.app.Application
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.room.Dao
@@ -76,6 +79,9 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     private val _users = mutableStateListOf<User>()
     val users: List<User> get() = _users
 
+    var loggedInUser by mutableStateOf<User?>(null)
+
+
     init {
         // Initialize by loading users
         getUsers()
@@ -112,4 +118,15 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
             getUsers()
         }
     }
+
+    // New method to set logged-in user
+    fun loggedInUser(user: User) {
+        loggedInUser = user
+    }
+
+    // New method to clear logged-in user (for logout)
+    fun clearLoggedInUser() {
+        loggedInUser = null
+    }
+
 }

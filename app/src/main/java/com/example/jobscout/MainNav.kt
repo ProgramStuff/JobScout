@@ -19,12 +19,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.example.jobscout.Data.AppliedViewModel
 import com.example.jobscout.Data.JobViewModel
+import com.example.jobscout.Data.UserViewModel
 import com.example.jobscout.pages.Dashboard
 import com.example.jobscout.pages.HomeScreen
 
 
 @Composable
-fun WelcomeScreen(appliedViewModel: AppliedViewModel, jobViewModel: JobViewModel){
+fun WelcomeScreen(appliedViewModel: AppliedViewModel, jobViewModel: JobViewModel, userViewModel: UserViewModel){
 //    The bottom nav bar items and icons
     val navItemList = listOf(
         NavItem(name = "Home", Icons.Default.Home),
@@ -51,16 +52,24 @@ fun WelcomeScreen(appliedViewModel: AppliedViewModel, jobViewModel: JobViewModel
             }
         }
     ){innerPadding ->
-        DesignScreen(modifier = Modifier.padding(innerPadding), selectedOption, appliedViewModel,jobViewModel)
+        DesignScreen(
+            modifier = Modifier.padding(innerPadding),
+            selectedOption,
+            appliedViewModel,
+            jobViewModel,
+            userViewModel)
     }
 }
 
 @Composable
-fun DesignScreen(modifier: Modifier, selectedOption: Int, appliedViewModel: AppliedViewModel, jobViewModel: JobViewModel) {
+fun DesignScreen(modifier: Modifier, selectedOption: Int,
+                 appliedViewModel: AppliedViewModel,
+                 jobViewModel: JobViewModel,
+                 userViewModel: UserViewModel) {
     when(selectedOption){
         // When selectedOption is changed change the activity
         0-> HomeScreen(jobViewModel)
-        1-> Dashboard(appliedVewModel = appliedViewModel)
+        1-> Dashboard(appliedViewModel, userViewModel, jobViewModel)
     }
 }
 
