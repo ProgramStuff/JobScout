@@ -75,6 +75,7 @@ fun Dashboard( appliedVewModel: AppliedViewModel){
 
 @Composable
 fun AppliedJobScreen(navController: NavHostController, appliedVewModel: AppliedViewModel) {
+    val appliedJobs = appliedVewModel.appliedJob
     // Google fonts package provider
     val provider = GoogleFont.Provider(
         providerAuthority = "com.google.android.gms.fonts",
@@ -87,6 +88,8 @@ fun AppliedJobScreen(navController: NavHostController, appliedVewModel: AppliedV
     val newFontFamily = FontFamily(
         Font(googleFont = fontName, fontProvider = provider)
     )
+
+
 
     val userId = 1
     val jobId = 1
@@ -147,7 +150,6 @@ fun AppliedJobScreen(navController: NavHostController, appliedVewModel: AppliedV
                 Row {
                     JobCard(userId, jobId, jobTitle, jobStatus, url)
                 }
-
 
                 // ! Keep this spacer at the bottom, it ensures cards are not hidden by nav bar !
                 Spacer(modifier = Modifier.height(80.dp))
