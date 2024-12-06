@@ -121,6 +121,7 @@ fun AppliedJobScreen(navController: NavHostController, appliedVewModel: AppliedV
             Text(text = "Your Jobs", style = MaterialTheme.typography.headlineSmall)
             Spacer(modifier = Modifier.height(16.dp))
 
+            // TODO: Turn buttons into a bar
             Row {
                 Button(onClick = { navController.navigate("applied") },
                     modifier = Modifier.padding(8.dp)
@@ -153,19 +154,21 @@ fun AppliedJobScreen(navController: NavHostController, appliedVewModel: AppliedV
                                             job.jobTitle,
                                             appliedJob.status,
                                             job.jobTitle,
-                                            "Company Name"
+                                            "Company Name",
+                                            appliedVewModel
                                         )
+//                                        TextButton(onClick = {},
+//                                            Modifier.padding(end = 0.dp)) {
+//                                            Text(modifier = Modifier.padding(end = 0.dp) ,text = "DELETE", color = Color.Red)
+//                                        }
                                     }
                                     Spacer(modifier = Modifier.height(16.dp))
-
                                 }
                             }
                         }
                     }
                 }
-                // TODO: Get applied jobs with userId
                 // TODO: Delete button
-                // TODO: Saved updated status
                 // TODO: Make title a link to job posting
 
                 // ! Keep this spacer at the bottom, it ensures cards are not hidden by nav bar !
@@ -210,22 +213,28 @@ fun SavedJobScreen(navController: NavHostController, appliedVewModel: AppliedVie
 
 
 @Composable
-fun JobCard(userId: Int, jobId: Int, jobTitle: String, jobStatus: String, url: String, companyName: String) {
+fun JobCard(
+    userId: Int,
+    jobId: Int,
+    jobTitle: String,
+    jobStatus: String,
+    url: String,
+    companyName: String,
+    appliedVewModel: AppliedViewModel
+) {
     ElevatedCard(
         elevation  = CardDefaults.cardElevation(
             defaultElevation = 6.dp
         ),
         modifier = Modifier
-            .size(width = 260.dp, height = 150.dp),
+            .size(width = 260.dp, height = 190.dp),
     ) {
-        // TODO: Use text format to put link and status side by side
-        // TODO: Clicking status opens a drop down to change
-        // TODO: Add button to update changed status
 
         Text(
             modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp),
 
             // I am using an annotated to apply different styles to a single string
+
             text = buildAnnotatedString {
                 withStyle(
                     // Apply style to the first section of the string
@@ -234,7 +243,7 @@ fun JobCard(userId: Int, jobId: Int, jobTitle: String, jobStatus: String, url: S
                         fontSize = 20.sp,
                     )
                 ) {
-                    append(jobTitle)
+                        append(jobTitle)
                 }
                 withStyle(
                     // Apply style to the second section of the string
@@ -255,13 +264,14 @@ fun JobCard(userId: Int, jobId: Int, jobTitle: String, jobStatus: String, url: S
                 }
             }
         )
-        JobStatusSelection(jobStatus)
+        JobStatusSelection(jobStatus, userId, jobId, appliedVewModel)
+
     }
 }
 
 
 @Composable
-fun JobStatusSelection(currentStatus: String) {
+fun JobStatusSelection(currentStatus: String, uid: Int, jobid: Int, appliedVewModel: AppliedViewModel) {
 
     var isDropDownExpanded by remember { mutableStateOf(false) }
 
@@ -272,20 +282,42 @@ fun JobStatusSelection(currentStatus: String) {
 
             Row(
                 modifier = Modifier
-                    .padding(start = 20.dp, top = 15.dp)
+                    .padding(start = 50.dp, top = 15.dp)
                     .clickable {
                         isDropDownExpanded = true
                     }
             ) {
-                TextButton(onClick = { /*TODO*/ }, Modifier.padding(bottom = 15.dp)) {
-                    Text(text = "Save")
-                }
-                Spacer(modifier = Modifier.width(25.dp))
+                Spacer(modifier = Modifier.width(30.dp))
                 Text(text = jobStatus[itemPosition])
                 Icon(
                    Icons.Filled.KeyboardArrowDown,
                     contentDescription = "Dropdown arrow"
                 )
+            }
+
+            Row {
+                Spacer(modifier = Modifier.width(15.dp))
+                TextButton(
+                    onClick = {
+                        appliedVewModel.updateAppliedJob(uid, jobid, jobStatus[itemPosition])
+                    },
+                    Modifier.padding(bottom = 0.dp)
+                ) {
+                    Text(text = "SAVE")
+                }
+                Spacer(modifier = Modifier.width(90.dp))
+
+                // TODO: Add the delete functionality
+                TextButton(
+                    onClick = {},
+                    Modifier.padding(end = 0.dp)
+                ) {
+                    Text(
+                        modifier = Modifier.padding(bottom = 0.dp),
+                        text = "DELETE",
+                        color = Color.Red
+                    )
+                }
             }
 
             DropdownMenu(
