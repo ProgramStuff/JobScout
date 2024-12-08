@@ -130,7 +130,7 @@ class AppliedViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    private fun updateAppliedJob(uid: Int, jid: Int, newStatus: String){
+    fun updateAppliedJob(uid: Int, jid: Int, newStatus: String){
         viewModelScope.launch {
             withContext(Dispatchers.IO){
                 appliedJobDao.updateStatus(uid, jid, newStatus)

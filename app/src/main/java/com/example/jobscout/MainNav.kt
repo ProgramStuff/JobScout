@@ -1,5 +1,6 @@
 package com.example.jobscout
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -11,12 +12,15 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.core.graphics.toColor
 import com.example.jobscout.Data.AppliedViewModel
 import com.example.jobscout.Data.JobViewModel
 import com.example.jobscout.Data.UserViewModel
@@ -37,15 +41,19 @@ fun WelcomeScreen(appliedViewModel: AppliedViewModel, jobViewModel: JobViewModel
         bottomBar={
             // Nav bar containing the text and icons
             // Updates the selectedOption from index
-            NavigationBar {
+            NavigationBar(modifier = Modifier.background(Color(238, 238, 238))) {
                 navItemList.forEachIndexed{index, navItem ->
-                    NavigationBarItem(selected = selectedOption==index,
+                    NavigationBarItem(
+                        modifier = Modifier.background(Color(238, 238, 238)),
+                        selected = selectedOption==index,
                         onClick = {selectedOption = index},
                         icon = {
-                            Icon(imageVector = navItem.icon, contentDescription = "icon")
+                            Icon(imageVector = navItem.icon, contentDescription = "icon", tint = Color(98, 114, 84))
                         },
                         label ={
-                            Text(text = navItem.name)
+                            Text(
+                                color = Color(98, 114, 84),
+                                text = navItem.name)
                         }
                     )
                 }
