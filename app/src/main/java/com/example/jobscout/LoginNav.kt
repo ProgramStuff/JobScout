@@ -18,6 +18,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.activity.ComponentActivity
+import androidx.compose.foundation.background
+import androidx.compose.ui.graphics.Color
 import com.example.jobscout.Data.UserViewModel
 import com.example.jobscout.pages.LoginScreen
 import com.example.jobscout.pages.RegisterScreen
@@ -47,12 +49,17 @@ fun Login (modifier: Modifier= Modifier,
             NavigationBar {
                 navItemList.forEachIndexed{index, navItem ->
                     NavigationBarItem(selected = selectedOption==index,
+                        modifier = Modifier.background(Color(238, 238, 238)),
                         onClick = {selectedOption = index},
                         icon = {
-                            Icon(imageVector = navItem.icon, contentDescription = "icon")
+                            Icon(imageVector = navItem.icon, contentDescription = "icon",
+                                tint = Color(98, 114, 84)
+                            )
                         },
                         label ={
-                            Text(text = navItem.name)
+                            Text(
+                                color = Color(98, 114, 84),
+                                text = navItem.name)
                         }
                     )
                 }

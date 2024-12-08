@@ -27,9 +27,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.room.*
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -48,11 +50,6 @@ import com.example.jobscout.ui.theme.JobScoutTheme
 
 
 
-
-
-
-
-
 class MainActivity : ComponentActivity() {
     // All ViewModel are instantiated and passed from MainActivity
     private val userViewModel: UserViewModel by viewModels()
@@ -65,9 +62,7 @@ class MainActivity : ComponentActivity() {
             JobScoutTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
+                    modifier = Modifier.fillMaxSize()) {
                     StartApp(userViewModel, appliedVewModel, jobViewModel)
                 }
             }
@@ -91,3 +86,5 @@ fun StartApp(userViewModel: UserViewModel, appliedViewModel: AppliedViewModel, j
         )
     }
 }
+
+
