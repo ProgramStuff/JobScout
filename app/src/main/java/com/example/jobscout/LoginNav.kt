@@ -19,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.ui.graphics.Color
 import com.example.jobscout.Data.UserViewModel
 import com.example.jobscout.pages.LoginScreen
@@ -29,11 +30,12 @@ import com.example.jobscout.pages.RegisterScreen
 // This allows redirect to WelcomeScreen after login and
 // Redirect to login after successful signup
 @Composable
-fun Login (modifier: Modifier= Modifier,
-           onLoginSuccess: () -> Unit,
-           onSignUpSuccess: () -> Unit,
-           userViewModel: UserViewModel
-){
+fun Login(
+    modifier: Modifier = Modifier,
+    onLoginSuccess: () -> Unit,
+    onSignUpSuccess: () -> Unit,
+    userViewModel: UserViewModel
+) {
 
 //    The bottom nav bar items and icons
     val navItemList = listOf(
@@ -41,53 +43,62 @@ fun Login (modifier: Modifier= Modifier,
         NavItem(name = "Sign Up", Icons.Default.Create),
     )
 //    Selected option for current page choice
-    var selectedOption by remember { mutableStateOf(value = 0)}
+    var selectedOption by remember { mutableStateOf(value = 0) }
     Scaffold(modifier = Modifier.fillMaxSize(),
-        bottomBar={
+        bottomBar = {
             // Nav bar containing the text and icons
             // Updates the selectedOption from index
-            NavigationBar {
-                navItemList.forEachIndexed{index, navItem ->
-                    NavigationBarItem(selected = selectedOption==index,
+            NavigationBar(containerColor = Color(238, 238, 238)) {
+                navItemList.forEachIndexed { index, navItem ->
+                    NavigationBarItem(
+                        colors = NavigationBarItemDefaults.colors(
+                            indicatorColor = Color(221, 221, 221)
+                        ),
+                        selected = selectedOption == index,
                         modifier = Modifier.background(Color(238, 238, 238)),
-                        onClick = {selectedOption = index},
+                        onClick = { selectedOption = index },
                         icon = {
-                            Icon(imageVector = navItem.icon, contentDescription = "icon",
+                            Icon(
+                                imageVector = navItem.icon, contentDescription = "icon",
                                 tint = Color(98, 114, 84)
                             )
                         },
-                        label ={
+                        label = {
                             Text(
                                 color = Color(98, 114, 84),
-                                text = navItem.name)
+                                text = navItem.name
+                            )
                         }
                     )
                 }
             }
         }
-    ){innerPadding ->
+    ) { innerPadding ->
         LoginNav(modifier = Modifier.padding(innerPadding),
             selectedOption,
             onLoginSuccess,
             // Redirect to login
-            onSignUpSuccess = { selectedOption = 0}, userViewModel)
+            onSignUpSuccess = { selectedOption = 0 }, userViewModel
+        )
     }
 }
 
 //LoginNav defines mutable array of null User to share and save user info between login and signup
 @Composable
-fun LoginNav(modifier: Modifier,
-             selectedOption: Int,
-             onLoginSuccess: () -> Unit,
-             onSignUpSuccess: () -> Unit,
-             userViewModel: UserViewModel
+fun LoginNav(
+    modifier: Modifier,
+    selectedOption: Int,
+    onLoginSuccess: () -> Unit,
+    onSignUpSuccess: () -> Unit,
+    userViewModel: UserViewModel
 ) {
 
-    when(selectedOption){
+    when (selectedOption) {
 
         // When selectedOption is changed change the activity
-        0-> LoginScreen(onLoginSuccess = onLoginSuccess, userViewModel = userViewModel)
-        1-> RegisterScreen(onSignUpSuccess = onSignUpSuccess, userViewModel = userViewModel)
+        0 -> LoginScreen(onLoginSuccess = onLoginSuccess, userViewModel = userViewModel)
+        1 -> RegisterScreen(onSignUpSuccess = onSignUpSuccess, userViewModel = userViewModel)
     }
 }
+
 

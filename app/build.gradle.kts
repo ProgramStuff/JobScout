@@ -21,6 +21,7 @@ android {
         }
     }
 
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -49,6 +50,7 @@ android {
         }
     }
 }
+
 
 dependencies {
 

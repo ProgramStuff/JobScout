@@ -51,14 +51,14 @@ class User(private val validUsername: String, private val validPassword: String)
     }
 }
 
-// Login screen takes a lambda function or a function with no return value or parameters
-// This allows navigation to WelcomeScreen after login
+// Login screen takes a function
+// This allows navigation to WelcomeScreen after login by changing the onLoginSuccess value
 @Composable
 fun LoginScreen(onLoginSuccess: () -> Unit, userViewModel: UserViewModel) {
     var email by remember { mutableStateOf("") };
     var password by remember { mutableStateOf("") };
     var welcomeMsg by remember { mutableStateOf("") };
-    var emailError by remember { mutableStateOf("")}
+    var emailError by remember { mutableStateOf("") }
     var loggedInUser by remember { mutableStateOf<Any?>(null) }
     val users = userViewModel.users
 
@@ -83,24 +83,27 @@ fun LoginScreen(onLoginSuccess: () -> Unit, userViewModel: UserViewModel) {
             .fillMaxSize()
             .background(Color(221, 221, 221)),
         horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
+    ) {
 
         // Title
-        Spacer(modifier = Modifier
-            .height(30.dp))
+        Spacer(
+            modifier = Modifier
+                .height(30.dp)
+        )
         Text(
             modifier = Modifier
                 .fillMaxWidth(),
             text = "Job Scout", fontFamily = newFontFamily, fontSize = 40.sp,
             color = Color(98, 114, 84),
-            textAlign = TextAlign.Center)
+            textAlign = TextAlign.Center
+        )
         Spacer(modifier = Modifier.height(40.dp))
 
         Text(
-            text = "Login", style = MaterialTheme.typography.headlineSmall)
+            text = "Login", style = MaterialTheme.typography.headlineSmall
+        )
 
         Spacer(modifier = Modifier.height(30.dp))
-
 
 
         /*** Email with validation ***/
@@ -109,20 +112,27 @@ fun LoginScreen(onLoginSuccess: () -> Unit, userViewModel: UserViewModel) {
             colors = TextFieldDefaults.colors(Color(118, 136, 91)),
             value = email,
             onValueChange = {
+                // Validate email input matches email pattern
                 email = it
-                emailError = if (!android.util.Patterns.EMAIL_ADDRESS.matcher(it).matches()) "Invalid email" else ""
+                emailError = if (!android.util.Patterns.EMAIL_ADDRESS.matcher(it)
+                        .matches()
+                ) "Invalid email" else ""
             },
-            label = { Text(text = "Email")},
+            label = { Text(text = "Email") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
         )
-        if (emailError.isNotEmpty()) Text(text = emailError, color = MaterialTheme.colorScheme.error)
+        // Display error
+        if (emailError.isNotEmpty()) Text(
+            text = emailError,
+            color = MaterialTheme.colorScheme.error
+        )
 
         Spacer(modifier = Modifier.padding(10.dp))
 
         OutlinedTextField(
             colors = TextFieldDefaults.colors(Color(118, 136, 91)),
-            value = password, onValueChange = {password = it},
-            label = { Text(text = "Password")})
+            value = password, onValueChange = { password = it },
+            label = { Text(text = "Password") })
 
         Spacer(modifier = Modifier.padding(10.dp))
 
@@ -133,26 +143,26 @@ fun LoginScreen(onLoginSuccess: () -> Unit, userViewModel: UserViewModel) {
                 .padding(8.dp)
                 .width(150.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(98, 114, 84)),
-                    onClick = {
-            val matchingUser = users.find { user ->
-                // TODO: This is for testing change back to email and password values
+            onClick = {
+                val matchingUser = users.find { user ->
 
-                user.email == "jordan@nscc.ca" && user.password == "password"
-            }
-
-            if (matchingUser != null) {
-                // Get the logged in users id to access throughout app
-                users.forEachIndexed{ index, user ->
-                    if(user.email == "jordan@nscc.ca"){
-                        userViewModel.loggedInUser(user)
-                    }
+                    user.email == email && user.password == password
                 }
-                welcomeMsg = "Login Success"
-                onLoginSuccess()
-            } else {
-                welcomeMsg = "Invalid credentials"
-            }
-        }) {
+
+                // Login user function from user class
+                if (matchingUser != null) {
+                    // Get the logged in users id to access throughout app
+                    users.forEachIndexed { index, user ->
+                        if (user.email == email) {
+                            userViewModel.loggedInUser(user)
+                        }
+                    }
+                    welcomeMsg = "Login Success"
+                    onLoginSuccess()
+                } else {
+                    welcomeMsg = "Invalid credentials"
+                }
+            }) {
             Text(text = "Login")
         }
         Spacer(modifier = Modifier.height(8.dp))
