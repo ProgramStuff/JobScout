@@ -15,8 +15,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-
-
 // Entity class
 @Entity(tableName = "jobs")
 data class Job(
@@ -34,10 +32,14 @@ interface JobDao {
     suspend fun insert(job: Job)
 
     @Query("SELECT * FROM jobs")
-    suspend fun getAllJobs(): List<Job>
+    fun getAllJobs(): List<Job>
+
+    @Query("DELETE FROM jobs")
+    suspend fun deleteAllJobs()
 
     @Delete
     suspend fun delete(job: Job)
+
 }
 
 //View Model (Logic)
@@ -57,18 +59,29 @@ class JobViewModel(application: Application) : AndroidViewModel(application) {
             getJobs()
         }    }
 
-    private suspend fun getJobs(){
-        val jobsFromDb = withContext(Dispatchers.IO){
-            jobDao.getAllJobs()
+    fun getJobs(){
+        viewModelScope.launch {
+            val jobsFromDb = withContext(Dispatchers.IO){
+                jobDao.getAllJobs()
+            }
+            _jobs.clear()
+            _jobs.addAll(jobsFromDb)
         }
-        _jobs.clear()
-        _jobs.addAll(jobsFromDb)
     }
 
     fun addJob(job: Job){
         viewModelScope.launch {
             withContext(Dispatchers.IO){
                 jobDao.insert(job)
+            }
+            getJobs()
+        }
+    }
+
+    fun deleteAllRows(){
+        viewModelScope.launch {
+            withContext(Dispatchers.IO){
+                jobDao.deleteAllJobs()
             }
             getJobs()
         }

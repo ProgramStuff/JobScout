@@ -46,7 +46,7 @@ interface UserDao {
 
 // Room Database
 @Database(entities = [User::class, AppliedJob::class, Job::class], version = 2)
-abstract class AppDatabase : RoomDatabase(){
+abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun appliedJobDao(): AppliedJobDao
     abstract fun jobDao(): JobDao
@@ -87,7 +87,7 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
         getUsers()
     }
 
-    private fun getUsers(){
+    private fun getUsers() {
         try {
             viewModelScope.launch {
                 val usersFromDb = withContext(Dispatchers.IO) {
@@ -96,23 +96,23 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
                 _users.clear()
                 _users.addAll(usersFromDb)
             }
-        }catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    fun addUser(user: User){
+    fun addUser(user: User) {
         viewModelScope.launch {
-            withContext(Dispatchers.IO){
+            withContext(Dispatchers.IO) {
                 userDao.insert(user)
             }
             getUsers()
         }
     }
 
-    fun deleteUser(user: User){
+    fun deleteUser(user: User) {
         viewModelScope.launch {
-            withContext(Dispatchers.IO){
+            withContext(Dispatchers.IO) {
                 userDao.delete(user)
             }
             getUsers()

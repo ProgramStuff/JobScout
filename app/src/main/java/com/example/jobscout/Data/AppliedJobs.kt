@@ -16,13 +16,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-
 /*
     Entity class with foreign keys to reference users and jobs tables
     The FK will be updated and deleted if they are in the parent columns
  */
 
-@Entity(tableName = "applied_jobs",
+@Entity(
+    tableName = "applied_jobs",
     foreignKeys = [
         ForeignKey(
             entity = Job::class,
@@ -98,7 +98,7 @@ class AppliedViewModel(application: Application) : AndroidViewModel(application)
         getAppliedJobs()
     }
 
-    private fun getAppliedJobs(){
+    private fun getAppliedJobs() {
         try {
             viewModelScope.launch {
                 val appliedJobsFromDb = withContext(Dispatchers.IO) {
@@ -107,41 +107,36 @@ class AppliedViewModel(application: Application) : AndroidViewModel(application)
                 _appliedJobs.clear()
                 _appliedJobs.addAll(appliedJobsFromDb)
             }
-        }catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    fun addAppliedJob(appliedJob: AppliedJob){
+    fun addAppliedJob(appliedJob: AppliedJob) {
         viewModelScope.launch {
-            withContext(Dispatchers.IO){
+            withContext(Dispatchers.IO) {
                 appliedJobDao.insert(appliedJob)
             }
             getAppliedJobs()
         }
     }
 
-    fun deleteAppliedJob(uid: Int, jobId: Int){
+    fun deleteAppliedJob(uid: Int, jobId: Int) {
         viewModelScope.launch {
-            withContext(Dispatchers.IO){
+            withContext(Dispatchers.IO) {
                 appliedJobDao.deleteAppliedJob(uid, jobId)
             }
             getAppliedJobs()
         }
     }
 
-    fun updateAppliedJob(uid: Int, jid: Int, newStatus: String){
+    fun updateAppliedJob(uid: Int, jid: Int, newStatus: String) {
         viewModelScope.launch {
-            withContext(Dispatchers.IO){
+            withContext(Dispatchers.IO) {
                 appliedJobDao.updateStatus(uid, jid, newStatus)
             }
             getAppliedJobs()
         }
     }
 
-    // Clear applied jobs when user logs out
-//    fun clearAppliedJobs() {
-//        _appliedJobs.clear()
-//        currentUid = null
-//    }
 }
